@@ -1,0 +1,10 @@
+**/.terraform/**
+**/kubeconfig_*
+.vscode
+*.swp
+.DS_Store
+*.tfplan
+*.tfvars
+*.dccache
+*.scannerwork/
+.scannerwork/*
