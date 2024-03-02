@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "templatephpfpm.fullname" . }}-phpfpm
+  labels:
+    {{- include "templatephpfpm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.phpfpmService.type }}
+  ports:
+    - port: {{ .Values.phpfpmService.phpfpmPort }}
+      targetPort: {{ .Values.phpfpmService.phpfpmPort }}
+      protocol: TCP
+      name: {{ .Values.phpfpmService.name }}
+  selector:
+    app: {{ include "templatephpfpm.fullname" . }}-phpfpm
+    {{- include "templatephpfpm.selectorLabels" . | nindent 4 }}
