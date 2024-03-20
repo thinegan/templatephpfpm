@@ -46,12 +46,21 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 40 # Default 30s
       containers:
         - name: {{ .Chart.Name }}-nginx
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.nginximage.repository }}:{{ .Values.nginximage.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.nginximage.pullPolicy }}
+          lifecycle:
+            preStop:
+              exec:
+                command: [
+                  # Gracefully shutdown nginx
+                  # ref: https://learnk8s.io/graceful-shutdown
+                  "nginx", "-s", "quit"
+                ]
           env:
             - name: DD_AGENT_HOST
               valueFrom:
